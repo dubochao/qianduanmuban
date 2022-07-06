@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+	    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+		<title>DreamCoders ECharts扩展示例</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/app.css" />
+	</head>
+	
+	<body class="bg06">
+		<header class="header">
+			<h3>DreamCoders ECharts扩展示例</h3>
+		</header>
+		
+		<div class="wrapper">
+			<div class="container-fluid">
+				<div class="row fill-h">
+					<div class="col-lg-3 fill-h">
+						<div class="xpanel-wrapper xpanel-wrapper-1-2">
+							<div class="xpanel">
+								<div class="fill-h" id="wordChart"></div>
+							</div>
+						</div>
+						<div class="xpanel-wrapper xpanel-wrapper-1-2">
+							<div class="xpanel">
+								<div class="fill-h" id="ballChart"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 fill-h">
+						<div class="xpanel-wrapper xpanel-wrapper-1">
+							<div class="xpanel no-padding no-bg">
+								<div class="fill-h" id="fireworksChart"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3 fill-h">
+						<div class="xpanel-wrapper xpanel-wrapper-2-3">
+							<div class="xpanel">
+								<div class="fill-h" id="relationChart"></div>
+							</div>
+						</div>
+						<div class="xpanel-wrapper xpanel-wrapper-1-3">
+							<div class="xpanel">
+								<div class="fill-h" id="mapChart"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="js/echarts-3.8.5.min.js"></script>
+		<script type="text/javascript" src="js/echarts-wordcloud.min.js"></script>
+		<script type="text/javascript" src="js/echarts-liquidfill.min.js"></script>
+		<script type="text/javascript" src="js/echarts-map-china.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				/*************** 中国地图 **************/
+				//初始化echarts实例
+				const mapChart = echarts.init(document.getElementById("mapChart"));
+				(function() {
+					let data = [
+						{"name": "辽宁", "value": 77},
+						{"name": "吉林", "value": 42},
+						{"name": "黑龙江", "value": 72},
+						{"name": "四川", "value": 81},
+						{"name": "湖北", "value": 47},
+						{"name": "福建", "value": 67},
+						{"name": "深圳", "value": 82},
+						{"name": "广东", "value": 66},
+						{"name": "重庆", "value": 24},
+						{"name": "湖南", "value": 92},
+						{"name": "上海", "value": 95},
+						{"name": "江苏", "value": 91},
+						{"name": "浙江", "value": 94},
+						{"name": "安徽", "value": 64},
+						{"name": "北京", "value": 91},
+						{"name": "天津", "value": 65},
+						{"name": "山东", "value": 98},
+						{"name": "山西", "value": 83},
+						{"name": "河南", "value": 100},
+						{"name": "河北", "value": 70},
+						{"name": "内蒙古", "value": 11},
+						{"name": "江西", "value": 23},
+						{"name": "贵州", "value": 45},
+						{"name": "云南", "value": 36},
+						{"name": "西藏", "value": 9},
+						{"name": "陕西", "value": 21},
+						{"name": "甘肃", "value": 54},
+						{"name": "青海", "value": 48},
+						{"name": "宁夏", "value": 36},
+						{"name": "新疆", "value": 24},
+						{"name": "广西", "value": 68},
+						{"name": "海南", "value": 99},
+						{"name": "台湾", "value": 88}
+					];
+					
+					let opt = {
+						visualMap: {
+					        show: false,
+					        orient: 'horizontal',
+					        left: 'left',
+					        top: 'top',
+					        itemWidth: 5,
+					        calculable: true,
+					        seriesIndex: [0],
+					        inRange: {
+					            color: ['#aed8fe', '#57a1fc', '#3a73b8', '#2B32B2']
+					        }
+					    },
+						geo: {
+							map: 'china',
+					        roam: false, //开启鼠标缩放和漫游
+					        zoom: 1, //地图缩放级别
+							selectedMode: false, //选中模式：single | multiple
+							left: 0,
+							right: 0,
+							top: 0,
+							bottom: 0,
+							layoutCenter: ['50%', '50%'], //设置后left/right/top/bottom等属性无效
+							//layoutSize: '100%', //保持地图宽高比
+					        label: {
+					            emphasis: {
+					                show: true,
+					                textStyle: {
+					                	fontSize: 10,
+					                	color: '#fff'
+					                }
+					            }
+					        }
+						},
+						series: [{
+							type: 'map',
+							geoIndex: 0,
+							data: data
+						}]
+					};
+					mapChart.setOption(opt);
+				})();
+				
+				/*************** 大树 **************/
+				//初始化echarts实例
+				const fireworksChart = echarts.init(document.getElementById("fireworksChart"));
+				const treeDataURI =
+							'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAA2CAYAAADUOvnEAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA5tJREFUeNrcWE1oE0EUnp0kbWyUpCiNYEpCFSpIMdpLRTD15s2ePHixnj00N4/GoyfTg2fbiwdvvagHC1UQ66GQUIQKKgn1UAqSSFua38b3prPJZDs7s5ufKn0w7CaZ2W/fe9/73kyMRqNB3Nrj1zdn4RJ6du9T2u1a2iHYSxjP4d41oOHGQwAIwSUHIyh8/RA8XeiXh0kLGFoaXiTecw/hoTG4ZCSAaFkY0+BpsZceLtiAoV2FkepZSDk5EpppczBvpuuQCqx0YnkYcVVoqQYMyeCG+lFdaGkXeVOFNu4aEBalOBk6sbQrQF7gSdK5JXjuHXuYVIVyr0TZ0FjKDeCs6km7JYMUdrWAUVmZUBtmRnVPK+x6nIR2xomH06R35ggwJPeofWphr/W5UjPIxq8B2bKgE8C4HVHWvg+2gZjXj19PkdFztY7bk9TDCH/g6oafDPpaoMvZIRI5WyMB/0Hv++HkpTKE0kM+A+h20cPAfN4GuRyp9G+LMTW+z8rCLI8b46XO9zRcYZTde/j0AZm8WGb3Y2F9KLlE2nqYkjFLJAsDOl/lea0q55mqxXcL7YBc++bsCPMe8mUyU2ZIpnCoblca6TZA/ga2Co8PGg7UGUlEDd0ueptglbrRZLLE7poti6pCaWUo2pu1oaYI1CF9b9cCZPO3F8ikJQ/rPpQT5YETht26ss+uCIL2Y8vHwJGpA96GI5mjOlaKhowUy6BcNcgIhDviTGWCGFaqEuufWz4pgcbCh+w0gEOyOjTlTtYYlIWPYWKEsLDzOs+nhzaO1KEpd+MXpOoTUgKiNyhdy5aSMPNVqxtSsJFgza5EWA4zKtCJ2OGbLn0JSLu8+SL4G86p1Fpr7ABXdGFF/UTD4rfmFYFw4G9VAJ9SM3aF8l3yok4/J6IV9sDVb36ynmtJ2M5+CwxTYBdKNMBaocKGV2nYgkz6r+cHBP30MzAfi4Sy+BebSoPIOi8PW1PpCCvr/KOD4k9Zu0WSH0Y0+SxJ2awp/nlwKtcGyHOJ8vNHtRJzhPlsHr8MogtlVtwUU0tSM1x58upSKbfJnSKUR07GVMKkDNfXpzpv0RTHy3nZMVx5IOWdZIaPabGFvfpwpjnvfmJHXLaEvZUTseu/TeLc+xgAPhEAb/PbjO6PBaOTf6LQRh/dERde23zxLtOXbaKNhfq2L/1fAOPHDUhOpIf5485h7l+GNHHiSYPKE3Myz9sFxoJuAyazvwIMAItferha5LTqAAAAAElFTkSuQmCC';
+							const beginYear = 2016;
+							const endYear = 2050;
+							const lineCount = 10;
+				(function() {
+					
+						// Basic option:
+						option = {
+						color: ['#e54035'],
+						xAxis: {
+							axisLine: { show: false },
+							axisLabel: { show: false },
+							axisTick: { show: false },
+							splitLine: { show: false },
+							name: beginYear + '',
+							nameLocation: 'middle',
+							nameGap: 40,
+							nameTextStyle: {
+							color: 'green',
+							fontSize: 30,
+							fontFamily: 'Arial'
+							},
+							min: -2800,
+							max: 2800
+						},
+						yAxis: {
+							data: makeCategoryData(),
+							show: false
+						},
+						grid: {
+							top: 'center',
+							height: 280
+						},
+						series: [
+							{
+							name: 'all',
+							type: 'pictorialBar',
+							symbol: 'image://' + treeDataURI,
+							symbolSize: [30, 55],
+							symbolRepeat: true,
+							data: makeSeriesData(beginYear),
+							animationEasing: 'elasticOut'
+							},
+							{
+							name: 'all',
+							type: 'pictorialBar',
+							symbol: 'image://' + treeDataURI,
+							symbolSize: [30, 55],
+							symbolRepeat: true,
+							data: makeSeriesData(beginYear, true),
+							animationEasing: 'elasticOut'
+							}
+						]
+						};
+						// Make fake data.
+						function makeCategoryData() {
+						var categoryData = [];
+						for (var i = 0; i < lineCount; i++) {
+							categoryData.push(i + 'a');
+						}
+						return categoryData;
+						}
+						function makeSeriesData(year, negative) {
+						// make a fake value just for demo.
+						const r = (year - beginYear + 1) * 10;
+						const seriesData = [];
+						for (let i = 0; i < lineCount; i++) {
+							let sign = negative ? -1 * (i % 3 ? 0.9 : 1) : 1 * ((i + 1) % 3 ? 0.9 : 1);
+							seriesData.push({
+							value:
+								sign *
+								(year <= beginYear + 1
+								? Math.abs(i - lineCount / 2 + 0.5) < lineCount / 5
+									? 5
+									: 0
+								: (lineCount - Math.abs(i - lineCount / 2 + 0.5)) * r),
+							symbolOffset: i % 2 ? ['50%', 0] : undefined
+							});
+						}
+						return seriesData;
+						}
+						// Set dynamic data.
+						var currentYear = beginYear;
+						setInterval(function () {
+						currentYear++;
+						if (currentYear > endYear) {
+							currentYear = beginYear;
+						}
+						fireworksChart.setOption({
+							xAxis: {
+							name: currentYear
+							},
+							series: [
+							{
+								data: makeSeriesData(currentYear)
+							},
+							{
+								data: makeSeriesData(currentYear, true)
+							}
+							]
+						});
+						}, 800);
+						fireworksChart.setOption(option);
+					// fireworksChart.setOption(ballOpt);
+				}
+				)();
+				
+				/*************** 关系图 **************/
+				//初始化echarts实例
+				const relationChart = echarts.init(document.getElementById("relationChart"));
+				const relationOpt = {
+				    animationDurationUpdate: 1500,
+				    animationEasingUpdate: 'quinticInOut',
+				    label: {
+				        normal: {
+				            show: true,
+				            textStyle: {
+				                fontSize: 12
+				            }
+				        }
+				    },
+				    series: [{
+			            type: 'graph',
+			            symbolSize: 45,
+			            focusNodeAdjacency: true,
+			            roam: true,
+			            layout: 'force',
+			            force: {
+			                repulsion: 320 //斥力因子，值越大，斥力越大
+			            },
+			            label: {
+			                normal: {
+			                    show: true,
+			                    textStyle: {
+			                        fontSize: 12
+			                    },
+			                }
+			            },
+			            edgeSymbolSize: [4, 50],
+			            edgeLabel: {
+			                normal: {
+			                    show: true,
+			                    textStyle: {
+			                        fontSize: 10
+			                    },
+			                    formatter: "{c}"
+			                }
+			            },
+			            categories: [{
+			            	name: '知识图谱',
+			            	itemStyle: {
+			            		normal: {
+			            			color: '#f2637b'
+			            		}
+			            	}
+			            }, {
+			                name: '前端',
+			                itemStyle: {
+			                    normal: {
+			                        color: "#eaa674",
+			                    }
+			                }
+			            }, {
+			                name: '移动端',
+			                itemStyle: {
+			                    normal: {
+			                        color: "#3aa1ff",
+			                    }
+			                }
+			            }, {
+			                name: '服务端',
+			                itemStyle: {
+			                    normal: {
+			                        color: "#4ecb73",
+			                    }
+			                }
+			            }],
+			            data: [{
+			            	name: '知识图谱',
+			            	category: 0,
+			            	draggable: true
+			            }, {
+			            	name: '前端',
+			            	category: 1,
+			            	draggable: true
+			            }, {
+			            	name: '移动端',
+			            	category: 2,
+			            	draggable: true
+			            }, {
+			            	name: '服务端',
+			            	category: 3,
+			            	draggable: true
+			            }, {
+			                name: 'HTML',
+			                category: 1,
+			                draggable: true,
+			            }, {
+			                name: 'CSS',
+			                category: 1,
+			                draggable: true,
+			            }, {
+			                name: 'JavaScript',
+			                category: 1,
+			                draggable: true,
+			            }, {
+			                name: 'TypeScript',
+			                category: 1,
+			                draggable: true,
+			            }, {
+			                name: 'Java',
+			                category: 3,
+			                draggable: true,
+			            }, {
+			                name: 'PHP',
+			                category: 3,
+			                draggable: true,
+			            }, {
+			                name: 'Python',
+			                category: 3,
+			                draggable: true,
+			            }, {
+			                name: 'Andriod',
+			                category: 2,
+			                draggable: true,
+			            }, {
+			                name: 'Object-C',
+			                category: 2,
+			                draggable: true,
+			            }, {
+			                name: 'Swift',
+			                category: 2,
+			                draggable: true,
+			            }],
+			            links: [{
+			            	source: 0,
+			                target: 1,
+			                value: ''
+			            }, {
+			            	source: 0,
+			                target: 2,
+			                value: ''
+			            }, {
+			            	source: 0,
+			                target: 3,
+			                value: ''
+			            }, {
+			                source: 1,
+			                target: 4,
+			                value: ''
+			            }, {
+			            	source: 1,
+			                target: 5,
+			                value: ''
+			            }, {
+			            	source: 1,
+			                target: 6,
+			                value: ''
+			            }, {
+			            	source: 1,
+			                target: 7,
+			                value: ''
+			            }, {
+			                source: 6,
+			                target: 7,
+			                value: '超集'
+			            }, {
+			            	source: 3,
+			                target: 8,
+			                value: ''
+			            }, {
+			            	source: 3,
+			                target: 9,
+			                value: ''
+			            }, {
+			            	source: 3,
+			                target: 10,
+			                value: ''
+			            }, {
+			            	source: 9,
+			                target: 10,
+			                value: '脚本'
+			            }, {
+			            	source: 2,
+			                target: 11,
+			                value: ''
+			            }, {
+			            	source: 2,
+			                target: 12,
+			                value: ''
+			            }, {
+			            	source: 2,
+			                target: 13,
+			                value: ''
+			            }, {
+			            	source: 12,
+			                target: 13,
+			                value: 'iOS'
+			            }],
+			            lineStyle: {
+			                normal: {
+			                    opacity: 0.9,
+			                    width: 1,
+			                    curveness: 0
+			                }
+			            }
+				    }]
+				};
+				relationChart.setOption(relationOpt);
+				
+				/*************** 水球 **************/
+				//https://github.com/ecomfe/echarts-liquidfill
+				//初始化echarts实例
+				const ballChart= echarts.init(document.getElementById("ballChart"));
+				const ballOpt = {
+					series: [{
+				        type: 'liquidFill',
+				        radius: '95%',
+				        label: {
+				        	show: false
+				        },
+				        shape: 'path://M367.855,428.202c-3.674-1.385-7.452-1.966-11.146-1.794c0.659-2.922,0.844-5.85,0.58-8.719 c-0.937-10.407-7.663-19.864-18.063-23.834c-10.697-4.043-22.298-1.168-29.902,6.403c3.015,0.026,6.074,0.594,9.035,1.728 c13.626,5.151,20.465,20.379,15.32,34.004c-1.905,5.02-5.177,9.115-9.22,12.05c-6.951,4.992-16.19,6.536-24.777,3.271 c-13.625-5.137-20.471-20.371-15.32-34.004c0.673-1.768,1.523-3.423,2.526-4.992h-0.014c0,0,0,0,0,0.014 c4.386-6.853,8.145-14.279,11.146-22.187c23.294-61.505-7.689-130.278-69.215-153.579c-61.532-23.293-130.279,7.69-153.579,69.202 c-6.371,16.785-8.679,34.097-7.426,50.901c0.026,0.554,0.079,1.121,0.132,1.688c4.973,57.107,41.767,109.148,98.945,130.793 c58.162,22.008,121.303,6.529,162.839-34.465c7.103-6.893,17.826-9.444,27.679-5.719c11.858,4.491,18.565,16.6,16.719,28.643 c4.438-3.126,8.033-7.564,10.117-13.045C389.751,449.992,382.411,433.709,367.855,428.202z',
+				        outline: {
+				            show: false
+				        },
+				        backgroundStyle: {
+				            borderColor: '#156ACF',
+				            borderWidth: 1,
+				            shadowColor: 'rgba(0, 0, 0, 0.4)',
+				            shadowBlur: 20
+				        },
+				        data: [0.6, 0.5, 0.4, 0.3]
+				    }]
+				};
+				ballChart.setOption(ballOpt);
+				
+				/*************** 词云 **************/
+				//https://github.com/ecomfe/echarts-wordcloud
+				//初始化echarts实例
+				const wordChart= echarts.init(document.getElementById("wordChart"));
+				const wordOpt = {
+				    series: [{
+				        type: 'wordCloud',
+				        shape: 'circle', //circle cardioid diamond triangle-forward triangle
+				       	left: 0,
+				       	right: 0,
+				       	top: 0,
+				       	right: 0,
+				       	width: '100%',
+				       	height: '100%',
+				        gridSize: 0, //值越大，word间的距离越大，单位像素
+				        sizeRange: [10, 32], //word的字体大小区间，单位像素
+				        rotationRange: [-90, 90], //word的可旋转角度区间
+				        textStyle: {
+				            normal: {
+				                color: function() {
+				                    return 'rgb(' + [
+				                        Math.round(Math.random() * 160),
+				                        Math.round(Math.random() * 160),
+				                        Math.round(Math.random() * 160)
+				                    ].join(',') + ')';
+				                }
+				            },
+				            emphasis: {
+				                shadowBlur: 2,
+				                shadowColor: '#000'
+				            }
+				        },
+				        data: [{
+				            name: '数据可视化',
+				            value: 3000,
+				            textStyle: {
+				            	normal: {color: '#f52f55'},
+				            	emphasis: {}
+				            }
+				        }, {
+				            name: '大数据',
+				            value: 2181
+				        }, {
+				            name: '云计算',
+				            value: 1386
+				        }, {
+				            name: '物联网',
+				            value: 2055
+				        }, {
+				            name: '敬请关注',
+				            value: 2467
+				        }, {
+				            name: '人工智能',
+				            value: 2244
+				        }, {
+				            name: '深度学习',
+				            value: 1898
+				        }, {
+				            name: '机器学习',
+				            value: 1484
+				        },  {
+				            name: 'AI',
+				            value: 897
+				        }, {
+				            name: 'Big Data',
+				            value: 847
+				        }, {
+				            name: 'Deep Learning',
+				            value: 1366
+				        }, {
+				            name: 'IoT',
+				            value: 555
+				        }, {
+				            name: 'Data Visualization',
+				            value: 550
+				        }, {
+				            name: '共识算法',
+				            value: 2222
+				        }, {
+				            name: '智能合约',
+				            value: 366
+				        }, {
+				            name: '比特币',
+				            value: 360
+				        }, {
+				            name: 'Block Chain',
+				            value: 282
+				        }, {
+				            name: '数据挖掘',
+				            value: 273
+				        }, {
+				            name: 'Hadoop',
+				            value: 265
+				        }]
+				    }],
+				    backgroundColor: 'rgba(255, 255, 255, 0.7)'
+				};
+				wordChart.setOption(wordOpt);
+				
+				/********** 窗口大小改变时，重置报表大小 ********************/
+				window.onresize = function() {
+					wordChart.resize();
+					ballChart.resize();
+					relationChart.resize();
+					fireworksChart.resize();
+					mapChart.resize();
+				};
+			});
+		</script>
+	</body>
+</html>
